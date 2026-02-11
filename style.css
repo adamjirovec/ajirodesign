@@ -1,19 +1,59 @@
-/* ===== Base / Typography ===== */
+/* ================================
+   AJIROTYPE — Base / Typography
+   Fixes: synthetic bolding, smoothing, crisp display rendering
+   ================================ */
+
+/* 1) Load the font with explicit style/weight so browsers don't guess */
 @font-face {
   font-family: 'Ajirotype';
   src: url('Ajirotype.otf') format('opentype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* 2) Predictable sizing/layout */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 3) Core page defaults */
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
-  font-family: 'Ajirotype', system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'Ajirotype', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 400;                 /* prevents synthesized bold */
+  font-style: normal;
   color: #111;
-  background: #fff;
+  background: #fcfcfc;              /* slightly off-white = more premium */
   text-align: center;
-  line-height: 1.25;
+  line-height: 1.35;
+
+  /* Key rendering fixes for sharp geometric fonts */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
 }
 
-/* ===== Mobile safe-area compensation (iOS, etc.) ===== */
+/* 4) Keep headings from getting "fatter" via weight defaults */
+h1, h2, h3, h4, h5, h6,
+strong, b {
+  font-family: inherit;
+  font-weight: 400;                 /* disables synthetic embolden */
+  font-style: inherit;
+}
+
+/* Optional: small spacing helps squared fonts look lighter/cleaner */
+h1, h2, h3 {
+  letter-spacing: 0.03em;
+}
+
+/* 5) Mobile safe-area compensation (iOS, etc.) */
 @supports (-webkit-touch-callout: none) {
   body { padding-bottom: env(safe-area-inset-bottom, 20px); }
 }
