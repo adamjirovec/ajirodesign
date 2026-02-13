@@ -78,13 +78,19 @@ function startHeroCycle() {
   clearAllTimers();
 
   scheduledTimeouts.push(
-    setTimeout(() => typeWriter("Don't let your life slip away in traffic"), 1000)
+    setTimeout(() => typeWriter("Designed to dominate the urban enviroment"), 1000)
   );
   scheduledTimeouts.push(
-    setTimeout(() => typeWriter("Advanced Composite performance for everyday riding"), 6000)
+    setTimeout(() => typeWriter("Advanced composite performance for everyday riding"), 6000)
   );
   scheduledTimeouts.push(
-    setTimeout(() => typeWriter("Built to move the cities"), 11000)
+    setTimeout(() => typeWriter("Avoid the traffic and live the dream"), 11000)
+  );
+  scheduledTimeouts.push(
+    setTimeout(() => typeWriter("Pre-Order the Ajiro P1"), 16000)
+  );
+  scheduledTimeouts.push(
+    setTimeout(() => typeWriter("Starting at $5000"), 21000)
   );
 }
 
