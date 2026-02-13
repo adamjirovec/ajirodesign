@@ -87,7 +87,7 @@ function startHeroCycle() {
     setTimeout(() => typeWriter("Avoid the traffic and live the dream"), 11000)
   );
   scheduledTimeouts.push(
-    setTimeout(() => typeWriter("Pre-Order the Ajiro P1"), 16000)
+    setTimeout(() => typeWriter("Pre-Order the AJIRO P1"), 16000)
   );
   scheduledTimeouts.push(
     setTimeout(() => typeWriter("Starting at $5000"), 21000)
