@@ -1,15 +1,16 @@
 /**
  * =========================================================
- * AJIRO — Script
+ * AJIRO — Script (simplified for MP4 background loop)
  *
  * Responsibilities:
- * 1) Initialize the HLS background video on the home page.
+ * 1) Play the background MP4 video in a loop.
  * 2) Run the typewriter headline cycle.
- * 3) Fade in the CTA button after a short delay.
+ * 3) Fade in the CTA button.
  *
  * Notes:
- * - This script is loaded on the home page only.
- * - It is written to fail safely if an expected element is missing.
+ * - Assumes <video id="video"> exists on the home page.
+ * - Uses a plain MP4 source: main_video/video.MP4
+ * - Autoplay requirements: muted + playsInline.
  * =========================================================
  */
 
@@ -20,36 +21,29 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* =========================
-   VIDEO
+   VIDEO (MP4 LOOP)
    ========================= */
 
 function initVideo() {
   const video = document.getElementById("video");
-  if (!video) return; // Not on the home page
+  if (!video) return;
 
-  const videoSrc = "main_video/Website-Video.m3u8";
+  // Your new simple file:
+  video.src = "main_video/video.MP4";
 
-  // Most browsers need HLS.js to play .m3u8
-  if (window.Hls && Hls.isSupported()) {
-    const hls = new Hls();
+  // Ensure background-video autoplay works across browsers/iOS
+  video.muted = true;
+  video.loop = true;
+  video.autoplay = true;
+  video.playsInline = true; // iOS Safari
+  video.setAttribute("playsinline", "");
+  video.setAttribute("muted", "");
+  video.setAttribute("loop", "");
 
-    hls.loadSource(videoSrc);
-    hls.attachMedia(video);
-
-    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-      video.play().catch(() => {});
-    });
-
-    return;
-  }
-
-  // Safari/iOS can play HLS natively
-  if (video.canPlayType("application/vnd.apple.mpegurl")) {
-    video.src = videoSrc;
-    video.addEventListener("loadedmetadata", () => {
-      video.play().catch(() => {});
-    });
-  }
+  // Try to start playback (will fail silently if user gesture required)
+  const tryPlay = () => video.play().catch(() => {});
+  video.addEventListener("canplay", tryPlay, { once: true });
+  tryPlay();
 }
 
 /* =========================
@@ -59,18 +53,12 @@ function initVideo() {
 let typingTimeoutId = null;
 let scheduledTimeouts = [];
 
-/** Clears the current typewriter loop timers (used on visibility changes). */
 function clearAllTimers() {
   scheduledTimeouts.forEach(clearTimeout);
   scheduledTimeouts = [];
   if (typingTimeoutId) clearTimeout(typingTimeoutId);
 }
 
-/**
- * Types text into #type, one character at a time.
- * @param {string} text - Text to type
- * @param {number} speed - Milliseconds per character
- */
 function typeWriter(text, speed = 38) {
   const el = document.getElementById("type");
   if (!el) return;
@@ -79,29 +67,22 @@ function typeWriter(text, speed = 38) {
   let i = 0;
 
   const step = () => {
-    el.textContent += text.charAt(i);
-    i += 1;
-
-    if (i < text.length) {
-      typingTimeoutId = setTimeout(step, speed);
-    }
+    el.textContent += text.charAt(i++);
+    if (i < text.length) typingTimeoutId = setTimeout(step, speed);
   };
 
   step();
 }
 
-/** Schedules the headline sequence (kept identical timings/text). */
 function startHeroCycle() {
   clearAllTimers();
 
   scheduledTimeouts.push(
     setTimeout(() => typeWriter("Don't let your life slip away in traffic"), 1000)
   );
-
   scheduledTimeouts.push(
     setTimeout(() => typeWriter("Advanced Composite performance for everyday riding"), 6000)
   );
-
   scheduledTimeouts.push(
     setTimeout(() => typeWriter("Built to move the cities"), 11000)
   );
@@ -111,7 +92,6 @@ function startHeroCycle() {
    CTA BUTTON
    ========================= */
 
-/** Fades in the CTA button on the home page after a short delay. */
 function initCTA() {
   const btn = document.getElementById("fade");
   if (!btn) return;
@@ -127,13 +107,16 @@ function initCTA() {
 
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
-    // Stop timers while tab is hidden to avoid "catching up" later.
     clearAllTimers();
     return;
   }
 
-  // Restart cycle and ensure CTA is visible on return.
   startHeroCycle();
+
+  // Kick the video again when returning to the tab
+  const video = document.getElementById("video");
+  if (video) video.play().catch(() => {});
+
   const btn = document.getElementById("fade");
   if (btn) btn.style.opacity = "1";
 });

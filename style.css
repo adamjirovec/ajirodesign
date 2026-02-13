@@ -1,5 +1,5 @@
 /* =========================================================
-   AJIRO — STYLE SYSTEM
+   AJIRO — STYLE SYSTEM (INDEX = WHITE, P1 PAGE = GRAY)
    Goal: minimal, consistent, and predictable.
    ========================================================= */
 
@@ -17,9 +17,16 @@
    TOKENS / VARIABLES
    ========================= */
 :root {
-  --aji-gray: #b3b3b3;
   --header-h: 60px;
   --footer-h: 60px;
+
+  /* Default (INDEX / home): pure white UI/text */
+  --text-color: #ffffff;
+
+  /* P1 page: your original gray */
+  --p1-text-color: #b3b3b3;
+  --p1-border-color: rgba(179, 179, 179, 1);
+  --p1-hover-bg: #b3b3b3;
 }
 
 /* =========================
@@ -30,7 +37,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Ajirotype", sans-serif;
-  color: var(--aji-gray);
+  color: var(--text-color);
 }
 
 html,
@@ -40,17 +47,31 @@ body {
 }
 
 /* =========================
+   VIDEO OVERLAY (HOME)
+   ========================= */
+#video {
+  opacity: 1;
+}
+
+.video-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5); /* 50% darkness */
+  pointer-events: none;
+}
+
+/* =========================
    VIDEO BACKGROUND (HOME)
    ========================= */
 video {
   position: fixed;
-  inset: 0;                 /* top:0; right:0; bottom:0; left:0 */
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: -1;              /* keep video behind all UI */
-  pointer-events: none;     /* video never blocks clicks */
-  background: #ffffff;
+  z-index: -1;
+  pointer-events: none;
+  background: #000; /* fallback while video loads */
 }
 
 .bg {
@@ -124,6 +145,7 @@ video {
 
 .socials img {
   height: 22px;
+  transition: transform 0.25s ease;
 }
 
 .socials img:hover {
@@ -131,16 +153,13 @@ video {
 }
 
 /* =========================
-   CTA BUTTON (SHARED)
-   Notes:
-   - Home page: starts hidden (opacity 0) and fades in via JS.
-   - P1 page: overrides opacity to 1 so it shows immediately.
+   CTA BUTTON (DEFAULT = HOME WHITE)
    ========================= */
 #fade {
   display: inline-block;
   padding: 16px 32px;
   border-radius: 999px;
-  border: 3px solid rgba(179, 179, 179);
+  border: 3px solid #ffffff;
 
   font-size: clamp(1rem, 2vw, 1.6rem);
   letter-spacing: 0.08em;
@@ -156,25 +175,35 @@ video {
 }
 
 #fade:hover {
-  background: #b3b3b3;
-  color: #fff;
+  background: #ffffff;
+  color: #000;
   transform: translateY(-2px);
 }
 
 /* =========================================================
-   PAGE 2 — P1 IMAGE + BUTTON (SCROLLABLE + CENTERED)
+   PAGE 2 — P1 IMAGE + BUTTON (GRAYISH LOOK)
    IMPORTANT:
-   - This section intentionally overrides the home page's
-     overflow:hidden so the P1 page can scroll.
-   - Kept identical behavior to your current build.
+   - This section overrides the home page (index) styling.
+   - Assumes your P1 page uses: <body class="page">
    ========================================================= */
 
-/* IMPORTANT: override global overflow:hidden */
+/* Make P1 page scrollable + set base background */
 html,
 body.page {
   height: auto;
   overflow-y: auto !important;
   overflow-x: hidden !important;
+  background: #ffffff;
+}
+
+/* Override the global text color on P1 page */
+body.page * {
+  color: var(--p1-text-color);
+}
+
+/* Keep header/footer white on P1 as well (you can change if desired) */
+body.page .header,
+body.page .footer {
   background: #ffffff;
 }
 
@@ -192,12 +221,11 @@ body.page {
   display: flex;
   flex-direction: column;
   align-items: center;
-
   gap: 64px;
   text-align: center;
 }
 
-/* If headings are used in the content area, remove default margins */
+/* Remove default margins inside content stack */
 .product-center h1,
 .product-center h2,
 .product-center h3,
@@ -213,10 +241,18 @@ body.page {
   object-fit: contain;
 }
 
-/* On P1 page, show the CTA immediately */
+/* P1 CTA: visible immediately + gray styling */
 body.page #fade {
   opacity: 1;
   display: inline-flex;
   justify-content: center;
   align-items: center;
+
+  border: 3px solid var(--p1-border-color);
+}
+
+/* P1 CTA hover: gray fill + white text (your original vibe) */
+body.page #fade:hover {
+  background: var(--p1-hover-bg);
+  color: #fff;
 }
