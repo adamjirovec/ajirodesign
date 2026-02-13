@@ -47,20 +47,6 @@ body {
 }
 
 /* =========================
-   VIDEO OVERLAY (HOME)
-   ========================= */
-#video {
-  opacity: 1;
-}
-
-.video-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5); /* 50% darkness */
-  pointer-events: none;
-}
-
-/* =========================
    VIDEO BACKGROUND (HOME)
    ========================= */
 video {
